@@ -1,63 +1,85 @@
-" $B?74D6-$r9=C[$9$k:]!&(BUpdate$B$9$k:]$O!"(B~/dotfiles$B$r:n@.$7!"0J2<$r<B9T$9$k$3$H(B
-" git clone https://github.com/<your account>/dotfiles.git 
-" ln -s ~/dotfiles/_vimrc ~/.vimrc
+" 新環境を構築する際・Updateする際は、~/dotfilesを作成し、以下を実行すること
+" git clone https://github.com/myo0612/dotfiles.git 
+" ln -s ~/dotfiles/.vimrc ~/.vimrc
+" vimを起動し、 :NeoBundleInstall を実行
+
+" 日本語設定
 :set encoding=utf-8
 :set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
 :set fileformats=unix,dos,mac
 
+" 行番号設定
 :set number
-
+" 行番号表示設定とカーソルラインのセット
 hi LineNr ctermbg=0 ctermfg=20
 hi CursorLineNr ctermbg=4 ctermfg=255
 set cursorline
 hi clear CursorLine
 
-nnoremap ts :sp 
+" タブ・ウィンドウのマッピング
+" 新しいタブ：tt
+" タブ移動：tn, tp
+" 新しいウィンドウ：ts tv
+" ウィンドウ移動：tw
+nnoremap ts :sp
 nnoremap tv :vs 
 nnoremap tt :tabnew 
 nnoremap tn gt 
 nnoremap tp gT 
 nnoremap tw <C-w>w
 
-
+" grepで検索結果をウィンドウ分割で表示
+" サクラよろしく別タブ表示とか、あるいは分割幅を設定したいけど上手い方法ないものか
 autocmd QuickFixCmdPost *grep* cwindow
 
+" 初回起動時のみruntimepathにneobundleのパスを指定する
 if has('vim_starting')
-   " $B=i2s5/F0;~$N$_(Bruntimepath$B$K(Bneobundle$B$N%Q%9$r;XDj$9$k(B
       set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 
-" NeoBundle$B$r=i4|2=(B
+" NeoBundleを初期化
 call neobundle#begin(expand('~/.vim/bundle/'))
 
 
-"
-" $B%$%s%9%H!<%k$9$k%W%i%0%$%s$r$3$3$K5-=R(B
+""""""""""""""""""""""""""""""""""""""""""""""""
+" インストールするプラグインをここに記述
+""""""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'Shougo/unite.vim'
+
+" NERDTreeメインで使っているので現在不使用
 " NeoBundle 'Shougo/vimfiler'
+
+" カーソル移動用ツール
 NeoBundle 'Lokaltog/vim-easymotion'
 " smartcase
 let g:EasyMotion_smartcase = 1
 let g:EasyMotion_use_migemo = 0
 
+" s {char}{char}{target} 3～4キーで画面内移動ができる
 nmap s <Plug>(easymotion-s2)
 xmap s <Plug>(easymotion-s2)
-omap z <Plug>(easymotion-s2) " surround.vim$B$H$+$V$k$N$G(B`z`
+omap z <Plug>(easymotion-s2) " surround.vimとかぶるので`z`
 let g:EasyMotion_startofline=0
+" Space + W, B, nなどでカーソル移動ができる デフォルトだと\
 let g:EasyMotion_leader_key = '<Space>'
+" target keyをホームポジションで押せるように変更
 let g:EasyMotion_keys = 'fjdkslaureiwoqpvncm'
 
+" エクスプローラ
 NeoBundle 'scrooloose/nerdtree'
 nnoremap NN :NERDTree<CR>
 
+" 速いGrep あまりつかってない
 NeoBundle 'grep.vim'
 
+" にゃんもどき
 NeoBundle 'drillbits/nyan-modoki.vim'
 set laststatus=2
 set statusline=%F%m%r%h%w[%{&ff}]%=%{g:NyanModoki()}(%l,%c)[%P]
 let g:nyan_modoki_select_cat_face_number = 4
 let g:nayn_modoki_animation_enabled= 1
 
+" 補完
 NeoBundle 'Shougo/neocomplcache'
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
@@ -76,11 +98,12 @@ inoremap <expr><C-g>     neocomplcache#undo_completion()
 inoremap <expr><C-l>     neocomplcache#complete_common_string()
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
+
 call neobundle#end()
 
-" $B%U%!%$%k%?%$%WJL$N%W%i%0%$%s(B/$B%$%s%G%s%H$rM-8z$K$9$k(B
+" ファイルタイプ別のプラグイン/インデントを有効にする
 filetype plugin indent on
 
-" !!! set [no]compatible $B0J9_$K5-=R$9$k$3$H(B
-"$B:81&$N%+!<%=%k0\F0$G9T4V0\F02DG=$K$9$k!#(B
+" !!! set [no]compatible 以降に記述すること
+"左右のカーソル移動で行間移動可能にする。よくあるエディタの動きに合わせて
 set whichwrap=b,s,<,>,[,]
