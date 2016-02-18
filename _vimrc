@@ -1,3 +1,6 @@
+" 新環境を構築する際・Updateする際は、~/dotfilesを作成し、以下を実行すること
+" git clone https://github.com/<your account>/dotfiles.git 
+" ln -s ~/dotfiles/_vimrc ~/.vimrc
 :set encoding=utf-8
 :set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
 :set fileformats=unix,dos,mac
