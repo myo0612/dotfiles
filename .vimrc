@@ -8,6 +8,9 @@
 :set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
 :set fileformats=unix,dos,mac
 
+" swpファイルの作成場所指定
+:set directory=~/.vim/temp
+
 " 行番号設定
 :set number
 " 行番号表示設定とカーソルラインのセット
@@ -15,6 +18,22 @@ hi LineNr ctermbg=0 ctermfg=20
 hi CursorLineNr ctermbg=4 ctermfg=255
 set cursorline
 hi clear CursorLine
+
+set tabstop=4
+set shiftwidth=4
+
+set wrap           " the longer line is wrapped
+set linebreak      " wrap at 'breakat'
+set breakat=\      " break point for linebreak (default " ^I!@*-+;:,./?")
+set showbreak=+\   " set showbreak
+if (v:version == 704 && has("patch338")) || v:version >= 705
+  set breakindent    " indent even for wrapped lines
+    " breakindent option
+      " autocmd is necessary when new file is opened in Vim
+        " necessary even for default(min:20,shift:0)
+          autocmd MyAutoGroup BufEnter * set breakindentopt=min:20,shift:0
+          endif
+          
 
 " タブ・ウィンドウのマッピング
 " 新しいタブ：tt
@@ -28,9 +47,16 @@ nnoremap tn gt
 nnoremap tp gT 
 nnoremap tw <C-w>w
 
-" grepで検索結果をウィンドウ分割で表示
+"C-Up/Downで画面中心スクロール
+nnoremap <C-Down> jzz
+nnoremap <C-Up> kzz
+
+"C-nで改行を挿入
+noremap <C-n> o<ESC>
+
 " サクラよろしく別タブ表示とか、あるいは分割幅を設定したいけど上手い方法ないものか
 autocmd QuickFixCmdPost *grep* cwindow
+
 
 " 初回起動時のみruntimepathにneobundleのパスを指定する
 if has('vim_starting')
@@ -67,7 +93,7 @@ let g:EasyMotion_keys = 'fjdkslaureiwoqpvncm'
 
 " エクスプローラ
 NeoBundle 'scrooloose/nerdtree'
-nnoremap NN :NERDTree<CR>
+nnoremap TT :NERDTree<CR>
 
 " 速いGrep あまりつかってない
 NeoBundle 'grep.vim'
@@ -76,7 +102,7 @@ NeoBundle 'grep.vim'
 NeoBundle 'drillbits/nyan-modoki.vim'
 set laststatus=2
 set statusline=%F%m%r%h%w[%{&ff}]%=%{g:NyanModoki()}(%l,%c)[%P]
-let g:nyan_modoki_select_cat_face_number = 4
+let g:nyan_modoki_select_cat_face_number = 6
 let g:nayn_modoki_animation_enabled= 1
 
 " 補完
