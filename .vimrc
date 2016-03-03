@@ -22,17 +22,18 @@ hi clear CursorLine
 set tabstop=4
 set shiftwidth=4
 
+" 右記URLから拝借 http://rcmdnk.github.io/blog/2014/07/14/computer-vim/
 set wrap           " the longer line is wrapped
 set linebreak      " wrap at 'breakat'
 set breakat=\      " break point for linebreak (default " ^I!@*-+;:,./?")
 set showbreak=+\   " set showbreak
 if (v:version == 704 && has("patch338")) || v:version >= 705
-  set breakindent    " indent even for wrapped lines
+    set breakindent    " indent even for wrapped lines
     " breakindent option
-      " autocmd is necessary when new file is opened in Vim
-        " necessary even for default(min:20,shift:0)
-          autocmd MyAutoGroup BufEnter * set breakindentopt=min:20,shift:0
-          endif
+    " autocmd is necessary when new file is opened in Vim
+    " necessary even for default(min:20,shift:0)
+	autocmd MyAutoGroup BufEnter * set breakindentopt=min:20,shift:0
+endif
           
 
 " タブ・ウィンドウのマッピング
