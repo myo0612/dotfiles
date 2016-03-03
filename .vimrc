@@ -3,6 +3,10 @@
 " ln -s ~/dotfiles/.vimrc ~/.vimrc
 " vimを起動し、 :NeoBundleInstall を実行
 
+augroup MyAutoGroup
+	autocmd!
+augroup END
+ 
 " 日本語設定
 :set encoding=utf-8
 :set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
