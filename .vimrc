@@ -1,3 +1,7 @@
+" Neobundleのインストール
+" mkdir -p ~/.vim/bundle
+" git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
+
 " 新環境を構築する際・Updateする際は、~/dotfilesを作成し、以下を実行すること
 " git clone https://github.com/myo0612/dotfiles.git 
 " ln -s ~/dotfiles/.vimrc ~/.vimrc
@@ -64,6 +68,7 @@ nnoremap tp gT
 nnoremap tw <C-w>w
 
 "C-Up/Down(j/k)で画面中心スクロール
+"macだとC-Down/Up使えない
 nnoremap <C-Down> jzz
 nnoremap <C-Up> kzz
 nnoremap <C-j> jzz
@@ -89,9 +94,35 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 " インストールするプラグインをここに記述
 """"""""""""""""""""""""""""""""""""""""""""""""
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neomru.vim'
+NeoBundle 'Shougo/unite-outline'
+let g:unite_enable_start_insert = 1
+"let g:unite_enable_split_vertically = 1
+let g:unite_winwidth = 30
+let g:unite_winheight = 10
+" 大文字小文字を区別しない
+let g:unite_enable_ignore_case = 1
+let g:unite_enable_smart_case = 1
 
-" NERDTreeメインで使っているので現在不使用
-" NeoBundle 'Shougo/vimfiler'
+let g:unite_source_grep_max_candidates = 1000
+
+let g:unite_split_rule = 'botright'
+
+" grep検索
+nnoremap <silent> fg  :<C-u>Unite vimgrep -buffer-name=search-buffer -default-action=tabopen<CR><CR>
+nnoremap <silent> fh  :<C-u>Unite vimgrep -buffer-name=search-buffer -default-action=tabopen -tab<CR><CR>
+" カーソル位置の単語をgrep検索
+nnoremap <silent> fc :<C-u>Unite vimgrep -buffer-name=search-buffer -default-action=tabopen -no-quit<CR><CR><C-R><C-W>
+nnoremap <silent> fj :<C-u>Unite vimgrep -buffer-name=search-buffer -default-action=tabopen -no-quit -tab<CR><CR><C-R><C-W>
+" grep検索結果の再呼出
+nnoremap <silent> fr  :<C-u>UniteResume search-buffer -no-quit<CR>
+
+nnoremap <silent> ff :Unite file -vertical -default-action=tabopen<CR>
+nnoremap <silent> fb :Unite buffer -vertical -default-action=tabopen<CR>
+nnoremap <silent> fo :Unite outline -vertical -no-quit<CR>
+
+
+NeoBundle 'Shougo/vimfiler'
 
 " カーソル移動用ツール
 NeoBundle 'Lokaltog/vim-easymotion'
@@ -109,9 +140,9 @@ let g:EasyMotion_leader_key = '<Space>'
 " target keyをホームポジションで押せるように変更
 let g:EasyMotion_keys = 'fjdkslaureiwoqpvncm'
 
-" エクスプローラ
-NeoBundle 'scrooloose/nerdtree'
-nnoremap TT :NERDTree<CR>
+" エクスプローラ Unite頑張って使うことにするので封印
+"NeoBundle 'scrooloose/nerdtree'
+"nnoremap TT :NERDTree<CR>
 
 " 速いGrep あまりつかってない
 NeoBundle 'grep.vim'
@@ -142,6 +173,8 @@ inoremap <expr><C-g>     neocomplcache#undo_completion()
 inoremap <expr><C-l>     neocomplcache#complete_common_string()
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
+" vimproc
+NeoBundle 'Shougo/vimproc'
 
 call neobundle#end()
 
