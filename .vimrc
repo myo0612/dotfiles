@@ -11,6 +11,17 @@ augroup END
 :set encoding=utf-8
 :set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
 :set fileformats=unix,dos,mac
+" かな入力誤爆防止
+nnoremap い i
+nnoremap あ a
+nnoremap え e
+nnoremap お o
+nnoremap う u
+nnoremap っｄ dd
+nnoremap っｙ yy
+nnoremap っｃ cc
+nnoremap ：ｗｑ :wq
+nnoremap ：ｑ！ :q!
 
 " swpファイルの作成場所指定
 :set directory=~/.vim/temp
@@ -52,9 +63,11 @@ nnoremap tn gt
 nnoremap tp gT 
 nnoremap tw <C-w>w
 
-"C-Up/Downで画面中心スクロール
+"C-Up/Down(j/k)で画面中心スクロール
 nnoremap <C-Down> jzz
 nnoremap <C-Up> kzz
+nnoremap <C-j> jzz
+nnoremap <C-k> kzz
 
 "C-nで改行を挿入
 noremap <C-n> o<ESC>
