@@ -6,6 +6,10 @@
 " git clone https://github.com/myo0612/dotfiles.git 
 " ln -s ~/dotfiles/.vimrc ~/.vimrc
 " vimを起動し、 :NeoBundleInstall を実行
+" vimprocをビルド (OSによって手順は異なる。ググること)
+" ターミナルにctagsを導入 (Unite outline で使用)
+" ターミナルにsilver searcher(ag)を導入 (Unite grepで使用)
+" かな入力中にescしたらオフにする設定を別途行う (キーバインドソフトを使うなど)
 
 augroup MyAutoGroup
 	autocmd!
@@ -41,6 +45,7 @@ hi clear CursorLine
 set tabstop=4
 set shiftwidth=4
 
+" かっこいいインデント
 " 右記URLから拝借 http://rcmdnk.github.io/blog/2014/07/14/computer-vim/
 set wrap           " the longer line is wrapped
 set linebreak      " wrap at 'breakat'
@@ -77,8 +82,8 @@ nnoremap <C-k> kzz
 "C-nで改行を挿入
 noremap <C-n> o<ESC>
 
-" サクラよろしく別タブ表示とか、あるいは分割幅を設定したいけど上手い方法ないものか
-autocmd QuickFixCmdPost *grep* cwindow
+" サクラよろしく別タブ表示とか、あるいは分割幅を設定したいけど上手い方法ないものか -> Uniteで上手いことできた
+"autocmd QuickFixCmdPost *grep* cwindow
 
 
 " 初回起動時のみruntimepathにneobundleのパスを指定する
@@ -106,6 +111,7 @@ let g:unite_enable_smart_case = 1
 
 let g:unite_source_grep_max_candidates = 1000
 
+"左と下に表示したいんだが？
 let g:unite_split_rule = 'botright'
 
 " grep検索
@@ -119,8 +125,14 @@ nnoremap <silent> fr  :<C-u>UniteResume search-buffer -no-quit<CR>
 
 nnoremap <silent> ff :Unite file -vertical -default-action=tabopen<CR>
 nnoremap <silent> fb :Unite buffer -vertical -default-action=tabopen<CR>
-nnoremap <silent> fo :Unite outline -vertical -no-quit<CR>
+nnoremap <silent> fo :Unite outline -vertical -no-quit -winwidth=50<CR>
 
+"unite grep に ag(The Silver Searcher) を使う
+if executable('ag')
+	let g:unite_source_grep_command = 'ag'
+	let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+	let g:unite_source_grep_recursive_opt = ''
+endif
 
 NeoBundle 'Shougo/vimfiler'
 
@@ -145,7 +157,7 @@ let g:EasyMotion_keys = 'fjdkslaureiwoqpvncm'
 "nnoremap TT :NERDTree<CR>
 
 " 速いGrep あまりつかってない
-NeoBundle 'grep.vim'
+"NeoBundle 'grep.vim'
 
 " にゃんもどき
 NeoBundle 'drillbits/nyan-modoki.vim'
@@ -153,6 +165,10 @@ set laststatus=2
 set statusline=%F%m%r%h%w[%{&ff}]%=%{g:NyanModoki()}(%l,%c)[%P]
 let g:nyan_modoki_select_cat_face_number = 6
 let g:nayn_modoki_animation_enabled= 1
+
+" 全角スペースを表示
+NeoBundle 'thinca/vim-zenspace'
+let g:zenspace#default_mode = 'on'
 
 " 補完
 NeoBundle 'Shougo/neocomplcache'
@@ -167,13 +183,13 @@ let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 " Define dictionary.
 let g:neocomplcache_dictionary_filetype_lists = {
-    \ 'default' : ''
-        \ }
+			\ 'default' : ''
+			\ }
 inoremap <expr><C-g>     neocomplcache#undo_completion()
 inoremap <expr><C-l>     neocomplcache#complete_common_string()
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
-" vimproc
+" vimproc コンパイルが必要
 NeoBundle 'Shougo/vimproc'
 
 call neobundle#end()
