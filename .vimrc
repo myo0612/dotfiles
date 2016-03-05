@@ -31,8 +31,22 @@ nnoremap っｃ cc
 nnoremap ：ｗｑ :wq
 nnoremap ：ｑ！ :q!
 
+"カーソル移動を表示単位で
+nnoremap j gj
+nnoremap k gk
+nnoremap <Down> gj
+nnoremap <Up> gk
+noremap h <Left>
+noremap l <Right>
+
+" macだとdeleteキー効かない
+set backspace=2
+
 " swpファイルの作成場所指定
 :set directory=~/.vim/temp
+
+"クリップボード
+set clipboard=unnamed,autoselect
 
 " 行番号設定
 :set number
@@ -50,7 +64,7 @@ set shiftwidth=4
 set wrap           " the longer line is wrapped
 set linebreak      " wrap at 'breakat'
 set breakat=\      " break point for linebreak (default " ^I!@*-+;:,./?")
-set showbreak=+\   " set showbreak
+"set showbreak=+\   " set showbreak
 if (v:version == 704 && has("patch338")) || v:version >= 705
     set breakindent    " indent even for wrapped lines
     " breakindent option
@@ -192,6 +206,16 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " vimproc コンパイルが必要
 NeoBundle 'Shougo/vimproc'
 
+"color scheme
+NeoBundle 'sjl/badwolf'
+
+"------------------------------------
+" colorscheme
+"------------------------------------
+syntax on
+"colorscheme badwolf
+highlight Normal ctermbg=none
+
 call neobundle#end()
 
 " ファイルタイプ別のプラグイン/インデントを有効にする
@@ -200,3 +224,4 @@ filetype plugin indent on
 " !!! set [no]compatible 以降に記述すること
 "左右のカーソル移動で行間移動可能にする。よくあるエディタの動きに合わせて
 set whichwrap=b,s,<,>,[,]
+
