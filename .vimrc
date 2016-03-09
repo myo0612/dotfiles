@@ -6,9 +6,11 @@
 " git clone https://github.com/myo0612/dotfiles.git 
 " ln -s ~/dotfiles/.vimrc ~/.vimrc
 " vimを起動し、 :NeoBundleInstall を実行
-" vimprocをビルド (OSによって手順は異なる。ググること)
+" vimprocを導入 (OSによって手順は異なる。ググること)
 " ターミナルにctagsを導入 (Unite outline で使用)
 " ターミナルにsilver searcher(ag)を導入 (Unite grepで使用)
+" 	SJIS EUC-JPに対応していないため、下記URLの修正を加えてコンパイルすること 
+" 		http://blog.monochromegane.com/blog/2013/09/15/the-silver-searcher-detects-japanese-char-set/
 " かな入力中にescしたらオフにする設定を別途行う (キーバインドソフトを使うなど)
 
 augroup MyAutoGroup
@@ -19,6 +21,11 @@ augroup END
 :set encoding=utf-8
 :set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
 :set fileformats=unix,dos,mac
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"キーマッピング
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " かな入力誤爆防止
 nnoremap い i
 nnoremap あ a
@@ -31,9 +38,58 @@ nnoremap っｃ cc
 nnoremap ：ｗｑ :wq
 nnoremap ：ｑ！ :q!
 
+"exモード無効化
+nnoremap Q <nop>
+
+" Redo を Uへ
+nnoremap U <C-r> 
+
+" タブ・ウィンドウのマッピング
+" 新しいタブ：tt
+" タブ移動：tn, tp
+" 新しいウィンドウ：ts tv
+" ウィンドウ移動：tw
+nnoremap ts :sp
+nnoremap tv :vs 
+nnoremap tt :tabnew 
+nnoremap tn gt 
+nnoremap tp gT 
+nnoremap tw <C-w>w
+
+" よく使うファイルを新しいタブで開く
+" ti：.vimrc, tm：tempファイル, to：空のtempファイル
+nnoremap ti :tabnew ~/.vimrc<CR>
+nnoremap tm :tabnew /temp/temp.txt<CR>
+nnoremap to :tabnew /temp/temp.txt<CR>dG
+
+"カレントディレクトリのtagsファイルをtagに指定
+nnoremap tg :set tag=./tags<CR>
+" カレントディレクトリにtagsファイルを生成
+nnoremap th :!ctags -R<CR>
+
+"C-Up/Down(j/k)で画面中心スクロール
+"macだとC-Down/Up使えない
+nnoremap <C-Down> jzz
+nnoremap <C-Up> kzz
+nnoremap <C-j> jzz
+nnoremap <C-k> kzz
+
+"C-nで改行を挿入
+noremap <C-n> o<ESC>
+
+" キーマッピングここまで プラグイン関係のマッピングはプラグイン部分に記述
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"クリップボード共通化
+set clipboard=unnamed,autoselect
+
 " swpファイルの作成場所指定
 :set directory=~/.vim/temp
 
+
+" 検索 smartcase ON
+:set ignorecase
+:set smartcase
 " 行番号設定
 :set number
 " 行番号表示設定とカーソルラインのセット
@@ -58,29 +114,6 @@ if (v:version == 704 && has("patch338")) || v:version >= 705
     " necessary even for default(min:20,shift:0)
 	autocmd MyAutoGroup BufEnter * set breakindentopt=min:20,shift:0
 endif
-          
-
-" タブ・ウィンドウのマッピング
-" 新しいタブ：tt
-" タブ移動：tn, tp
-" 新しいウィンドウ：ts tv
-" ウィンドウ移動：tw
-nnoremap ts :sp
-nnoremap tv :vs 
-nnoremap tt :tabnew 
-nnoremap tn gt 
-nnoremap tp gT 
-nnoremap tw <C-w>w
-
-"C-Up/Down(j/k)で画面中心スクロール
-"macだとC-Down/Up使えない
-nnoremap <C-Down> jzz
-nnoremap <C-Up> kzz
-nnoremap <C-j> jzz
-nnoremap <C-k> kzz
-
-"C-nで改行を挿入
-noremap <C-n> o<ESC>
 
 " サクラよろしく別タブ表示とか、あるいは分割幅を設定したいけど上手い方法ないものか -> Uniteで上手いことできた
 "autocmd QuickFixCmdPost *grep* cwindow
@@ -101,6 +134,12 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/unite-outline'
+NeoBundle 'osyo-manga/unite-quickfix'
+NeoBundle 'osyo-manga/shabadou.vim'
+
+""""""""""""""""""""""""""""""""""""""""""""""""
+" Unite設定
+
 let g:unite_enable_start_insert = 1
 "let g:unite_enable_split_vertically = 1
 let g:unite_winwidth = 30
@@ -115,11 +154,12 @@ let g:unite_source_grep_max_candidates = 1000
 let g:unite_split_rule = 'botright'
 
 " grep検索
-nnoremap <silent> fg  :<C-u>Unite vimgrep -buffer-name=search-buffer -default-action=tabopen<CR><CR>
-nnoremap <silent> fh  :<C-u>Unite vimgrep -buffer-name=search-buffer -default-action=tabopen -tab<CR><CR>
+nnoremap <silent> fa  :<C-u>Unite grep -buffer-name=search-buffer -default-action=tabopen<CR>
+nnoremap <silent> fg  :<C-u>Unite grep -buffer-name=search-buffer -default-action=tabopen<CR><CR>
+nnoremap <silent> fh  :<C-u>Unite grep -buffer-name=search-buffer -default-action=tabopen -tab<CR><CR>
 " カーソル位置の単語をgrep検索
-nnoremap <silent> fc :<C-u>Unite vimgrep -buffer-name=search-buffer -default-action=tabopen -no-quit<CR><CR><C-R><C-W>
-nnoremap <silent> fj :<C-u>Unite vimgrep -buffer-name=search-buffer -default-action=tabopen -no-quit -tab<CR><CR><C-R><C-W>
+nnoremap <silent> fc :<C-u>Unite grep -buffer-name=search-buffer -default-action=tabopen -no-quit<CR><CR><C-R><C-W><CR>
+nnoremap <silent> fj :<C-u>Unite grep -buffer-name=search-buffer -default-action=tabopen -no-quit -tab<CR><CR><C-R><C-W><CR>
 " grep検索結果の再呼出
 nnoremap <silent> fr  :<C-u>UniteResume search-buffer -no-quit<CR>
 
@@ -130,11 +170,14 @@ nnoremap <silent> fo :Unite outline -vertical -no-quit -winwidth=50<CR>
 "unite grep に ag(The Silver Searcher) を使う
 if executable('ag')
 	let g:unite_source_grep_command = 'ag'
-	let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+	let g:unite_source_grep_default_opts = '--nogroup --nocolor --column -S'
 	let g:unite_source_grep_recursive_opt = ''
 endif
 
 NeoBundle 'Shougo/vimfiler'
+
+" Unte設定ここまで
+""""""""""""""""""""""""""""""""""""""""""""""""
 
 " カーソル移動用ツール
 NeoBundle 'Lokaltog/vim-easymotion'
@@ -152,12 +195,6 @@ let g:EasyMotion_leader_key = '<Space>'
 " target keyをホームポジションで押せるように変更
 let g:EasyMotion_keys = 'fjdkslaureiwoqpvncm'
 
-" エクスプローラ Unite頑張って使うことにするので封印
-"NeoBundle 'scrooloose/nerdtree'
-"nnoremap TT :NERDTree<CR>
-
-" 速いGrep あまりつかってない
-"NeoBundle 'grep.vim'
 
 " にゃんもどき
 NeoBundle 'drillbits/nyan-modoki.vim'
@@ -165,6 +202,10 @@ set laststatus=2
 set statusline=%F%m%r%h%w[%{&ff}]%=%{g:NyanModoki()}(%l,%c)[%P]
 let g:nyan_modoki_select_cat_face_number = 6
 let g:nayn_modoki_animation_enabled= 1
+
+" 日本語の文節サポート
+NeoBundle 'deton/jasegment.vim'
+let g:jasegment#model = 'knbc_bunsetu'
 
 " 全角スペースを表示
 NeoBundle 'thinca/vim-zenspace'
@@ -192,6 +233,24 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " vimproc コンパイルが必要
 NeoBundle 'Shougo/vimproc'
 
+" ソースコードの簡易実行
+NeoBundle 'thinca/vim-quickrun'
+let g:quickrun_config = {
+			\	"_" : {
+			\		"hook/close_unite_quickfix/enable_hook_loaded" : 0,
+			\		"hook/unite_quickfix/enable_failure" : 0,
+			\		"hook/close_quickfix/enable_exit" : 0,
+			\		"hook/close_buffer/enable_failure" : 0,
+			\		"hook/close_buffer/enable_empty_data" : 0,
+			\		"hook/neco/enable" : 0,
+			\		"hook/neco/wait" : 5,
+			\		"outputter/buffer/split" : ":botright 8sp",
+			\		"runner" : "vimproc",
+			\		"runner/vimproc/updatetime" : 20,
+			\	},
+\}
+
+			"\		"outputter" : "multi:buffer:quickfix",
 call neobundle#end()
 
 " ファイルタイプ別のプラグイン/インデントを有効にする
