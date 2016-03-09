@@ -74,6 +74,14 @@ nnoremap <C-Up> kzz
 nnoremap <C-j> jzz
 nnoremap <C-k> kzz
 
+"カーソル移動を表示単位で
+nnoremap j gj
+nnoremap k gk
+nnoremap <Down> gj
+nnoremap <Up> gk
+noremap h <Left>
+noremap l <Right>
+
 "C-nで改行を挿入
 noremap <C-n> o<ESC>
 
@@ -83,13 +91,16 @@ noremap <C-n> o<ESC>
 "クリップボード共通化
 set clipboard=unnamed,autoselect
 
+" macだとdeleteキー効かない
+"set backspace=2
+
 " swpファイルの作成場所指定
 :set directory=~/.vim/temp
-
 
 " 検索 smartcase ON
 :set ignorecase
 :set smartcase
+
 " 行番号設定
 :set number
 " 行番号表示設定とカーソルラインのセット
@@ -106,7 +117,7 @@ set shiftwidth=4
 set wrap           " the longer line is wrapped
 set linebreak      " wrap at 'breakat'
 set breakat=\      " break point for linebreak (default " ^I!@*-+;:,./?")
-set showbreak=+\   " set showbreak
+"set showbreak=+\   " set showbreak
 if (v:version == 704 && has("patch338")) || v:version >= 705
     set breakindent    " indent even for wrapped lines
     " breakindent option
@@ -114,10 +125,6 @@ if (v:version == 704 && has("patch338")) || v:version >= 705
     " necessary even for default(min:20,shift:0)
 	autocmd MyAutoGroup BufEnter * set breakindentopt=min:20,shift:0
 endif
-
-" サクラよろしく別タブ表示とか、あるいは分割幅を設定したいけど上手い方法ないものか -> Uniteで上手いことできた
-"autocmd QuickFixCmdPost *grep* cwindow
-
 
 " 初回起動時のみruntimepathにneobundleのパスを指定する
 if has('vim_starting')
@@ -251,6 +258,16 @@ let g:quickrun_config = {
 \}
 
 			"\		"outputter" : "multi:buffer:quickfix",
+"color scheme
+"NeoBundle 'sjl/badwolf'
+
+"------------------------------------
+" colorscheme
+"------------------------------------
+"syntax on
+"colorscheme badwolf
+"highlight Normal ctermbg=none
+
 call neobundle#end()
 
 " ファイルタイプ別のプラグイン/インデントを有効にする
@@ -259,3 +276,4 @@ filetype plugin indent on
 " !!! set [no]compatible 以降に記述すること
 "左右のカーソル移動で行間移動可能にする。よくあるエディタの動きに合わせて
 set whichwrap=b,s,<,>,[,]
+
