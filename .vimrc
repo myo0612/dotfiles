@@ -68,13 +68,14 @@ nnoremap tg :set tag=./tags<CR>
 nnoremap th :!ctags -R<CR>
 
 "C-Up/Down(j/k)で画面中心スクロール
-"macだとC-Down/Up使えない
+"macだとC-Down/Up使えないので注意
 nnoremap <C-Down> jzz
 nnoremap <C-Up> kzz
 nnoremap <C-j> jzz
 nnoremap <C-k> kzz
 
 "カーソル移動を表示単位で
+" h,l のマッピングは折り返し跨ぎ移動に必要
 nnoremap j gj
 nnoremap k gk
 nnoremap <Down> gj
@@ -125,6 +126,18 @@ if (v:version == 704 && has("patch338")) || v:version >= 705
     " necessary even for default(min:20,shift:0)
 	autocmd MyAutoGroup BufEnter * set breakindentopt=min:20,shift:0
 endif
+
+" ~/.vim/undo に作業履歴を保存
+if has ('persistent_undo')
+	set undodir=~/.vim/undo
+	set undofile
+endif
+
+" 編集位置の記憶
+autocmd BufReadPost *
+			\ if line("'\"") > 0 && line("'\"") <= line("$") |
+			\   exe "normal g`\"" |
+			\ endif
 
 " 初回起動時のみruntimepathにneobundleのパスを指定する
 if has('vim_starting')
@@ -210,7 +223,7 @@ set statusline=%F%m%r%h%w[%{&ff}]%=%{g:NyanModoki()}(%l,%c)[%P]
 let g:nyan_modoki_select_cat_face_number = 6
 let g:nayn_modoki_animation_enabled= 1
 
-" 日本語の文節サポート
+" 日本語の文節サポート W, B, Eで日本語の単語移動がしやすくなる
 NeoBundle 'deton/jasegment.vim'
 let g:jasegment#model = 'knbc_bunsetu'
 
@@ -258,15 +271,19 @@ let g:quickrun_config = {
 \}
 
 			"\		"outputter" : "multi:buffer:quickfix",
-"color scheme
-"NeoBundle 'sjl/badwolf'
 
-"------------------------------------
-" colorscheme
-"------------------------------------
-"syntax on
-"colorscheme badwolf
-"highlight Normal ctermbg=none
+if has('mac')
+	"color scheme
+	NeoBundle 'sjl/badwolf'
+
+	"------------------------------------
+	" colorscheme
+	"------------------------------------
+	syntax on
+	colorscheme badwolf
+	highlight Normal ctermbg=none
+
+endif
 
 call neobundle#end()
 
