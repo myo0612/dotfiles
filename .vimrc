@@ -6,7 +6,7 @@
 " git clone https://github.com/myo0612/dotfiles.git 
 " ln -s ~/dotfiles/.vimrc ~/.vimrc
 " vimを起動し、 :NeoBundleInstall を実行
-" vimprocを導入 (OSによって手順は異なる。ググること)
+" vimprocをコンパイル (OSによって手順は異なる。ググること)
 " ターミナルにctagsを導入 (Unite outline で使用)
 " ターミナルにsilver searcher(ag)を導入 (Unite grepで使用)
 " 	SJIS EUC-JPに対応していないため、下記URLの修正を加えてコンパイルすること 
@@ -19,7 +19,7 @@ augroup END
  
 " 日本語設定
 :set encoding=utf-8
-:set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
+:set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis,
 :set fileformats=unix,dos,mac
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -255,6 +255,9 @@ NeoBundle 'Shougo/vimproc'
 
 " ソースコードの簡易実行
 NeoBundle 'thinca/vim-quickrun'
+"NeoBundle 'osyo-manga/vim-watchdogs'
+NeoBundle 'jceb/vim-hier'
+
 let g:quickrun_config = {
 			\	"_" : {
 			\		"hook/close_unite_quickfix/enable_hook_loaded" : 0,
@@ -271,6 +274,21 @@ let g:quickrun_config = {
 \}
 
 			"\		"outputter" : "multi:buffer:quickfix",
+"			\	"watchdogs_checker/_" : {
+"			\		"hook/close_quickfix/enable_exit" : 1,
+"			\	},
+
+" watchdogs
+" 書き込み後にシンタックスチェックを行う
+"let g:watchdogs_check_BufWritePost_enable = 1
+" 一定時間キー入力が無かった場合、バッファ書き込み後1度だけチェックする
+"let g:watchdogs_check_CursorHold_enables = 1 
+
+"call watchdogs#setup(g:quickrun_config)
+
+"NeoBundle 'tpope/vim-pathogen'
+NeoBundle 'scrooloose/syntastic'
+"call pathogen#infect()
 
 if has('mac')
 	"color scheme
